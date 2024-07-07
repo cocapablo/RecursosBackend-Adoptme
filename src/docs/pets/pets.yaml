@@ -1,0 +1,143 @@
+paths:
+  /api/pets/:
+    get:
+      summary: Obtiene todos las mascotas
+      tags:
+        - Pets
+      responses:
+        "200":
+          description: Todos las mascotas obtenidas correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#components/schemas/Pet'
+        "401":
+          description: Error por falta de permisos
+        "500":
+          description: Error interno del servidor
+    post:
+      summary: Agregar una mascota
+      tags:
+        - Pets
+      requestBody:
+        required: true
+        content:
+            application/json:
+              schema:
+                $ref: '#components/requestBodies/updatePet'
+      responses:
+        "200":
+          description: La mascota fué creada correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: 
+                    type: string
+                  payload:   
+                    $ref: '#components/schemas/Pet'
+        "401":
+          description: Error por falta de permisos
+        "500":
+          description: Error interno del servidor
+  /api/pets/{pid}:
+    put:
+      summary: Actualizar la mascota de _id = pid
+      tags:
+        - Pets
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: id de la mascota que se desea actualizar
+          schema: 
+            $type: string
+      requestBody:
+        required: true
+        content:
+            application/json:
+              schema:
+                $ref: '#components/requestBodies/updatePet'
+      responses:
+        "200":
+          description: La mascota fué actualizada correctamente
+        "401":
+          description: Error por falta de permisos
+        "500":
+          description: Error interno del servidor
+    delete:
+      summary: Borrar la mascota de _id = pid
+      tags:
+        - Pets
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: id de la mascota que se desea eliminar
+          schema: 
+            $type: string
+      responses:
+        "200":
+          description: la mascota fué eliminada correctamente
+        "401":
+          description: Error por falta de permisos
+        "500":
+          description: Error interno del servidor
+components:
+  schemas:
+    Pet:
+      type: object
+      properties:
+        _id: 
+          type: ObjectId
+          description: Id de la mascota generado por la base de datos
+        name:
+          type: string
+          description: Nombre de la mascota
+        specie:
+          type: string
+          description: Especie de la mascota
+        birthDate:
+          type: Date
+          description: Fecha de Nacimiento de la mascota
+        adopted:
+          type: boolean
+          description: Indica si la mascota fué adoptada
+        owner:
+          type: ObjectId
+          description: Id del propietario
+        image: 
+          type: string
+          description: imagen de la mascota
+      example:
+        _id: ObjectId('665189f11178dafc34723459')
+        name: Boby
+        specie: Perro,
+        birthDate: "2000-10-10T03:00:00.000Z"
+        adopted: false
+        owner: ObjectId('665184fb4f1bb23862a1aa7f')
+        image: "http://www.perros.com/boby"
+        
+  requestBodies:
+    updatePet:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Nombre de la mascota
+        specie:
+          type: string
+          description: Especie de la mascota
+        birthDate:
+          type: string
+          description: Fecha de nacimiento de la mascota en formato MM-DD-YYY 
+        password:
+          type: string
+          description: Contraseña del usuario hasheada
+      example:
+        name: Boby
+        specie: Perro
+        birthDate: 12-30-2024

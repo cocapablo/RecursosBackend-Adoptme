@@ -1,0 +1,92 @@
+paths:
+  /api/adoptions/:
+    get:
+      summary: Obtiene todas las adopciones
+      tags:
+        - Adoptions
+      responses:
+        "200":
+          description: Todos las mascotas obtenidas correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#components/schemas/Adoption'
+        "401":
+          description: Error por falta de permisos
+        "500":
+          description: Error interno del servidor
+  /api/adoptions/{uid}/{pid}:
+    post:
+      summary: Agregar una adopción
+      tags:
+        - Adoptions
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          description: id del usuario que va a adoptar
+          schema: 
+            $type: string
+        - name: pid
+          in: path
+          required: true
+          description: id de la mascota que va a ser adoptada
+          schema: 
+            $type: string
+      responses:
+        "200":
+          description: La mascota fué adoptada correctamente
+        "400":
+          description: La mascota ya había sido adoptada anteriormente 
+        "404":
+          description: Usuario o mascota inexistentes  
+        "401":
+          description: Error por falta de permisos
+        "500":
+          description: Error interno del servidor
+  /api/adoptions/{aid}:
+    get:
+      summary: Obtiene la adopción de _id = aid
+      tags:
+        - Adoptions
+      parameters:
+        - name: aid
+          in: path
+          required: true
+          description: id de la adopción que se desea solicitar
+          schema: 
+            $type: string
+      responses:
+        "200":
+          description: La adopción fué obtenida correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Adoption'
+        "401":
+          description: Error por falta de permisos
+        "500":
+          description: Error interno del servidor
+  
+components:
+  schemas:
+    Adoption:
+      type: object
+      properties:
+        _id: 
+          type: ObjectId
+          description: Id de la adopcion generado por la base de datos
+        owner:
+          type: ObjectId
+          description: Id del propietario
+        pet: 
+          type: ObjectId
+          description: Id de la mascota
+      example:
+        _id: ObjectId('665189f11178dafc34723459')
+        owner: ObjectId('665189f11178dafc34723459')
+        pet: ObjectId('665189f11178dafc34723459')
+        
+  
